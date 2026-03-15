@@ -3,10 +3,11 @@
   --blue: #8fa4b7;
   --terracotta: #de7e4e;
 
-  --bg: #f4f0eb;
+  --bg: #fbfaf7;
   --ink: #1f2320;
   --muted: rgba(31, 35, 32, 0.72);
   --border: #e6e3dc;
+  --card-bg: rgba(251, 250, 247, 0.88);
 }
 
 * {
@@ -14,52 +15,136 @@
 }
 
 html,
-body {
-  height: 100%;
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(143, 164, 183, 0.16),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(222, 126, 78, 0.1),
+      transparent 28%
+    ),
+    linear-gradient(to bottom, rgba(84, 100, 2, 0.04), var(--bg) 35%);
   color: var(--ink);
   font-family:
     system-ui,
     -apple-system,
-    Segoe UI,
-    Roboto,
-    Arial,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
 }
 
 .page {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  gap: 18px;
 }
 
+.lockedPage {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.content {
+  width: 100%;
+  padding: 24px 16px 60px;
+}
+
+/* Password Gate */
+.passwordCard {
+  width: min(480px, 100%);
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.passwordForm {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.label {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: white;
+  font: inherit;
+  color: var(--ink);
+}
+
+.input:focus {
+  outline: 2px solid rgba(143, 164, 183, 0.35);
+  outline-offset: 2px;
+}
+
+.button {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--olive);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.button:hover {
+  background: var(--terracotta);
+  transform: translateY(-1px);
+}
+
+.errorText {
+  margin: 12px 0 0;
+  color: #9f3d2b;
+  font-size: 14px;
+}
+
+/* Header */
 .header {
   width: min(900px, 100%);
-  margin-top: auto;
-  border: none;
-  /* border-radius: 16px;
+  margin: 0 auto 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
   background: linear-gradient(
     to bottom,
-    rgba(143, 164, 183, 0.14),
-    rgba(251, 250, 247, 0.95)
-  ); */
+    rgba(143, 164, 183, 0.16),
+    rgba(251, 250, 247, 0.96)
+  );
 }
 
 .headerInner {
-  padding: 18px 18px 16px;
+  padding: 22px 18px 20px;
   text-align: center;
 }
 
 .kicker {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   display: inline-block;
   padding: 6px 12px;
   border-radius: 999px;
@@ -72,34 +157,189 @@ body {
 }
 
 .title {
-  margin: 6px 0 6px;
-  font-size: clamp(26px, 4vw, 38px);
+  margin: 6px 0;
+  font-size: clamp(28px, 4vw, 42px);
   line-height: 1.1;
-  letter-spacing: 0.02em;
 }
 
-.sub {
+.subtext {
   margin: 0;
   color: var(--muted);
   font-size: 14px;
 }
 
-.date {
+.dateAccent {
   color: var(--terracotta);
   font-weight: 700;
 }
 
-/* Image area */
-.frame {
-  width: 100%;
-  height: calc(100vh - 140px); /* subtract header height */
+/* Countdown in header */
+.countdownHeader {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.countItem {
+  padding: 14px 10px 12px;
+  border: 1px solid rgba(143, 164, 183, 0.34);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
+
+.countNumber {
+  display: block;
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1;
+  font-weight: 800;
+  color: var(--olive);
+  letter-spacing: -0.04em;
+  animation: pulseUp 450ms ease;
+}
+
+.countLabel {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+
+@keyframes pulseUp {
+  0% {
+    opacity: 0.65;
+    transform: translateY(4px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Main content */
+.mainContent {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.imageSection,
+.infoSection {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+}
+
+.imageSection {
+  padding: 18px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .invite {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  display: block;
+
+  width: auto; /* prevents horizontal stretching */
+  height: auto; /* keeps natural aspect ratio */
+
+  max-width: 100%; /* responsive scaling */
+  max-height: 70vh; /* prevents it from getting too tall */
+
+  object-fit: contain; /* ensures full image shows */
+
+  border-radius: 14px;
+}
+
+.infoSection {
+  padding: 22px 20px;
+}
+
+.sectionHeader h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: var(--olive);
+}
+
+.sectionHeader p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.sectionBody {
+  display: grid;
+  gap: 10px;
+}
+
+.sectionBody p {
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Mobile polish */
+@media (max-width: 479px) {
+  .content {
+    padding: 18px 12px 40px;
+  }
+
+  .headerInner {
+    padding: 18px 14px 16px;
+  }
+
+  .countdownHeader {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .countItem {
+    padding: 12px 8px 10px;
+    border-radius: 14px;
+  }
+
+  .countNumber {
+    font-size: 30px;
+  }
+
+  .countLabel {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .infoSection {
+    padding: 18px 16px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 22px;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .content {
+    padding: 32px 24px 70px;
+  }
+
+  .headerInner {
+    padding: 26px 24px 24px;
+  }
+
+  .countdownHeader {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .mainContent {
+    gap: 22px;
+  }
+
+  .invite {
+    width: min(100%, 520px);
+  }
 }

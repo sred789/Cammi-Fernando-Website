@@ -1,27 +1,187 @@
+import { useEffect, useMemo, useState } from "react";
 import saveTheDate from "./assets/save-the-date.png";
 import "./styles.css";
 
+const SITE_PASSWORD = "CF2027!";
+const WEDDING_DATE = "2027-05-29T00:00:00";
+
 export default function App() {
+  const targetDate = useMemo(() => new Date(WEDDING_DATE), []);
+  const [password, setPassword] = useState("");
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [error, setError] = useState("");
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const countdown = getCountdown(targetDate, now);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (password === SITE_PASSWORD) {
+      setIsUnlocked(true);
+      setError("");
+    } else {
+      setError("Incorrect password. Please try again.");
+    }
+  }
+
+  if (!isUnlocked) {
+    return (
+      <div className="page lockedPage">
+        <main className="passwordCard">
+          <p className="kicker">Cammi &amp; Fernando</p>
+          <h1 className="title">Wedding Website</h1>
+          <p className="subtext">
+            Please enter the guest password to access travel, resort, and
+            schedule information.
+          </p>
+
+          <form onSubmit={handleSubmit} className="passwordForm">
+            <label htmlFor="site-password" className="label">
+              Guest Password
+            </label>
+
+            <input
+              id="site-password"
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              autoComplete="current-password"
+            />
+
+            <button type="submit" className="button">
+              Enter Site
+            </button>
+          </form>
+
+          {error ? <p className="errorText">{error}</p> : null}
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
-      <main className="frame">
-        <img
-          className="invite"
-          src={saveTheDate}
-          alt="Save the Date invitation"
-        />
-      </main>
+      <div className="content">
+        <header className="header">
+          <div className="headerInner">
+            <p className="kicker">Save the Date</p>
 
-      <footer className="header">
-        <div className="headerInner">
-          <p className="kicker">Save the Date</p>
-          <h1 className="title">Cammi & Fernando</h1>
-          <p className="sub">
-            Puerto Vallarta, Jalisco •{" "}
-            <span className="date">May 29, 2027</span>
-          </p>
-        </div>
-      </footer>
+            <h1 className="title">Cammi &amp; Fernando</h1>
+
+            <p className="subtext">
+              Puerto Vallarta, Jalisco •{" "}
+              <span className="dateAccent">May 29, 2027</span>
+            </p>
+
+            <div className="countdownHeader" aria-label="Countdown to wedding">
+              <CountdownItem value={countdown.days} label="Days" />
+              <CountdownItem value={countdown.hours} label="Hours" />
+              <CountdownItem value={countdown.minutes} label="Minutes" />
+              <CountdownItem value={countdown.seconds} label="Seconds" />
+            </div>
+          </div>
+        </header>
+
+        <main className="mainContent">
+          <section
+            className="imageSection"
+            aria-label="Save the date invitation"
+          >
+            <img
+              className="invite"
+              src={saveTheDate}
+              alt="Save the Date invitation for Cammi and Fernando"
+            />
+          </section>
+
+          <InfoSection
+            title="Travel Information"
+            subtitle="Placeholder section for airport, transportation, and arrival details."
+            items={[
+              { label: "Airport", value: "Information coming soon" },
+              { label: "Transportation", value: "Information coming soon" },
+              { label: "Arrival Notes", value: "Information coming soon" },
+            ]}
+          />
+
+          <InfoSection
+            title="Resort Information"
+            subtitle="Placeholder section for booking details, accommodations, and resort notes."
+            items={[
+              { label: "Resort Name", value: "Information coming soon" },
+              { label: "Booking Details", value: "Information coming soon" },
+              { label: "Guest Notes", value: "Information coming soon" },
+            ]}
+          />
+
+          <InfoSection
+            title="Schedule"
+            subtitle="Placeholder section for wedding weekend events and timing."
+            items={[
+              { label: "Welcome Event", value: "Information coming soon" },
+              { label: "Ceremony", value: "Information coming soon" },
+              { label: "Reception", value: "Information coming soon" },
+            ]}
+          />
+        </main>
+      </div>
     </div>
   );
+}
+
+function CountdownItem({ value, label }) {
+  return (
+    <div className="countItem">
+      <span className="countNumber" key={value}>
+        {value}
+      </span>
+      <small className="countLabel">{label}</small>
+    </div>
+  );
+}
+
+function InfoSection({ title, subtitle, items }) {
+  return (
+    <section className="infoSection">
+      <div className="sectionHeader">
+        <h2>{title}</h2>
+        <p>{subtitle}</p>
+      </div>
+
+      <div className="sectionBody">
+        {items.map((item) => (
+          <p key={item.label}>
+            <strong>{item.label}:</strong> {item.value}
+          </p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function getCountdown(targetDate, now) {
+  const diff = Math.max(targetDate.getTime() - now.getTime(), 0);
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  return {
+    days: String(days),
+    hours: String(hours).padStart(2, "0"),
+    minutes: String(minutes).padStart(2, "0"),
+    seconds: String(seconds).padStart(2, "0"),
+  };
 }

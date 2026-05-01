@@ -56,7 +56,14 @@ export default function MainWebsite() {
             title="Travel Information"
             subtitle="Placeholder section for airport, transportation, and arrival details."
             items={[
-              { label: "Airport", value: "Information coming soon" },
+              { label: "Airport", 
+                value: (<a
+                    href="https://thepuertovallartaairport.com/"
+                    target="_blank"
+                    rel ="noopener noreferrer"
+                  >
+                  Puerto Vallarta International Airport (PVR)
+                </a>)},
               { label: "Transportation", value: "Information coming soon" },
               { label: "Arrival Notes", value: "Information coming soon" },
             ]}
@@ -66,7 +73,14 @@ export default function MainWebsite() {
             title="Resort Information"
             subtitle="Placeholder section for booking details, accommodations, and resort notes."
             items={[
-              { label: "Resort Name", value: "Information coming soon" },
+              { label: "Resort", 
+                value: (<a
+                    href="https://www.velasvallarta.com/"
+                    target="_blank"
+                    rel ="noopener noreferrer"
+                  >
+                Velas Vallarta, Jalisco
+                </a>)},
               { label: "Booking Details", value: "Information coming soon" },
               { label: "Guest Notes", value: "Information coming soon" },
             ]}
@@ -81,6 +95,17 @@ export default function MainWebsite() {
               { label: "Reception", value: "Information coming soon" },
             ]}
           />
+          
+           <InfoSection
+            title="Court Wedding"
+            subtitle="Placeholder section for booking details, accommodations, and resort notes."
+            items={[
+              { label: "Date", value: "Information coming soon" },
+              { label: "Location", value: "Information coming soon" },
+              { label: "Guest Notes", value: "Information coming soon" },
+            ]}
+          />
+          
         </main>
       </div>
     </div>
